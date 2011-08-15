@@ -57,7 +57,7 @@ class Site(db.Model):
             logging.error('Get or insert site called with no user available')
             raise InvalidSiteError('No user logged in')
 
-        default_base_dir = '/Public/%s'%namespace_manager.get_namespace()
+        default_base_dir = '/Public/%s'%namespace_manager.get_namespace().replace('.','_')
         return cls.get_or_insert(key_name=cls.the_key_name,
                                  owner=user,
                                  owner_id=user.user_id(),
@@ -79,7 +79,7 @@ class Site(db.Model):
         Will return the old config path if it was changed
         """
         oldpath = self.get_config_path()
-        cdir, cfile = os.path.split(new_config_path.lower())
+        cdir, cfile = os.path.split(new_config_path)
         
         if not cdir.startswith('/'):
             cdit='/'+cdir

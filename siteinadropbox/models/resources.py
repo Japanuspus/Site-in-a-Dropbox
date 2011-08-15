@@ -74,7 +74,7 @@ class Resource(polymodel.PolyModel):
     @classmethod
     def get_resource_by_url(cls, url):
         # We cannot use 'get_by_key_name' because that would require knowing the parent
-        return cls.all().filter('url =',url).get()
+        return cls.all().filter('url =',url.lower()).get()
 
     @classmethod 
     def update(cls, gov, entry):
