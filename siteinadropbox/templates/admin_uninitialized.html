@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ settings.lang }}" lang="{{ settings.lang }}">
+<head>
+  <title>Site not initialized</title>
+  <link rel="stylesheet" href="/admin/css/blueprint/screen.css" type="text/css" media="screen, projection" />
+  <link rel="stylesheet" href="/admin/css/blueprint/print.css" type="text/css" media="print" />    
+  <!--[if lt IE 8]><link rel="stylesheet" href="/admin/css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="span-24 last">
+      <a href="{{ settings.home }}" class="logo">{{ settings.title }}</a>
+    </div>
+    <div id="sidebarleft" class="span-4">
+      {% block sidebarleft %}&nbsp;{% endblock %}
+    </div>
+    <div id="content" class="span-14">
+
+<h2>Welcome to Site in a Dropbox</h2>
+<p>
+  Somebody (probably you?) pointed this domain {{ server_name }} to
+  <a href="{{ settings.home }}">Site in a Dropbox</a>, a service
+  running on Google App Engine.
+</p>
+<p>
+  For this to work, the service <a href="{{ settings.home }}">Site in a Dropbox</a> needs to be
+  authorized to access your dropbox account.
+</p>
+<p>
+If you are the administrator you can go to the <a href="/admin">admin
+console</a> and get things set up
+</p>
+      
+   </div>
+    <div id="sidebar" class="span-6 last">
+      {% block sidebar %}&nbsp;{% endblock %} 
+    </div>
+    <div class="span-24"></div>
+    <div class="span-4">&nbsp;</div>
+    <div id="footer" class="span-20 last">
+      &copy; {{ settings.author }}, 2011.
+  </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Admin console{% endblock %}
+
+{% block content %}
+<h1>Admin console for {{ server_name }}.</h1>
+
+<h2>Server</h2>
+<dl>
+  <dt>Server:</dt><dd>{{ server_name }}</dd>
+  <dt>AppEngine Namespace:</dt><dd>{{ apps_namespace }}</dd>
+</dl>
+
+<h2>Linked account</h2>
+<p>This instance is linked to the dropbox account of {{ dropbox_info.data.display_name }} &lt; {{ dropbox_info.data.email }} &gt;.
+</p>
+<form method="post" action="{{ formurl }}"><dl>
+  <dt><label for="dropbox_base_dir">Site directory in Dropbox</label></dt> 
+  <dd>
+    <input type="text" class="text" name="config_path" id="config_path" value="{{ config_path }}" />
+    <input type="submit" name="action" value="save" />
+  </dd>  
+</dl></form>
+<form method="post" action="{{ auth_formurl }}">
+<p>To change dropbox account, make sure you are signed out of Dropbox
+or signed in with the right account, and then press to
+<input type="submit" name="action" value="authorize" />.</p>
+</form>
+
+<h2>Maintenance</h2>
+
+<form method="post" action="{{ formurl }}">
+ <ul>
+   <li><input type="submit" name="action" value="Sync" /> with Dropbox (subject to rate limits).</li>
+   <li><input type="submit" name="action" value="Verify" /> database integrity.</li>
+   <li><input type="submit" name="action" value="Flush" /> memcache.</li>
+   <li><input type="submit" name="action" value="Reload" /> everything from Dropbox.</li>
+   <li><input type="submit" name="action" value="Delete" /> delete this site.</li>
+</ul>
+</form>
+
+<p>
+Go to Google App engine <a href="/_ah/admin">admin console</a>.
+</p>
+  
+{% endblock %}
+

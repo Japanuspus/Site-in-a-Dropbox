@@ -1,0 +1,17 @@
+body { background:#fff; font-family: Arial, Helvetica, sans-serif; color:#333333; }
+h1, h2, h3, h4, h5, .title { font-family: Georgia, "Times New Roman", Times, serif; text-align: left; font-weight: normal; }
+
+#header .logo { font-size:3em; }
+
+a { color:#555555; text-decoration:none; background-color:transparent; border:none; border-bottom:#999 1px dotted; }
+a:hover { color:#919f20; }
+
+.page-description { margin: 15px 0 15px 0; }
+
+.post { margin: 15px 0 30px 0; }
+
+.post .date { font-family:"Lucida Grande", Geneva, Helvetica, sans-serif; font-size:10px; font-weight:lighter; font-variant:normal; text-transform:uppercase; color:#666; text-align:left; letter-spacing:0.3em; margin-bottom:10px; }
+.post .title { margin-bottom:5px; font-weight:400; font-size:2em; color:#333; text-align:left; }
+.post .title a { outline:none; }
+.post .title a:hover { color:#919f20; }
+.post .tags { font-family:"Lucida Grande", Geneva, Helvetica, sans-serif; font-size:10px; font-weight:lighter; font-variant:normal; color:#666; text-align:left; letter-spacing:0.3em; margin-bottom:16px; }

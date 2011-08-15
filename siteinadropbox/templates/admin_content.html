@@ -1,0 +1,24 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Content{% endblock %}
+
+{% block content %}
+{% if blob %}{{ blob|safe }}{% endif %}
+<p>
+Types explained:
+<b>R</b>: root entry, 
+<b>P</b>: preinstall (fake ) entry, 
+<b>D</b>: directory entry, 
+<b>F</b>: file entry, 
+</p>
+<form method="post" action="{{ formurl }}">
+<p>
+If something is out of whack, you can click to
+<input type="hidden" name="redirect_url" value="{{ request.path }}" />
+<input type="submit" name="action" value="verify" />
+database consistency 
+</p>
+TODO: flush, rerun formatters
+</form>
+
+{% endblock %}

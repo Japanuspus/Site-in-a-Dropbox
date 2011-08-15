@@ -1,0 +1,33 @@
+application: siteinadropbox
+version: 0-0-prebeta
+runtime: python
+api_version: 1
+
+handlers:
+- url: /(admin/css/.*)
+  static_files: siteinadropbox/static/\1
+  upload: siteinadropbox/static/.*
+
+- url: /admin/(metaadmin|_.*)
+  script: siteinadropbox/admin.py
+  login: admin
+
+- url: /admin|/admin/.*
+  script: siteinadropbox/admin.py
+  login: required
+
+- url: /drafts/.*
+  script: siteinadropbox/main.py
+  login: required
+
+- url: /.*
+  script: siteinadropbox/main.py
+
+builtins:
+- appstats: on         #Also middleware in appengine_config.py
+- datastore_admin: on  #http://code.google.com/appengine/docs/adminconsole/datastoreadmin.html
+
+admin_console:
+  pages:
+  - name: Meta Admin
+    url: /admin/metaadmin

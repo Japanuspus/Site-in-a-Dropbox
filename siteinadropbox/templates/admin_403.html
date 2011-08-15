@@ -1,0 +1,23 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Access not authorized{% endblock %}
+
+{% block content %}
+<h1>Access not authorized {{ server_name }}.</h1>
+
+<p>
+You are trying to access the admin console for {{ server_name }}
+without being logged in as the owner.
+{% if user %}
+You are currently logged in as {{ user.nickname }} &lt; {{ user.email }}&gt;.
+You may need to  <a href="{{ logout_url }}">log out</a>, and log back
+in to access the admin console.
+{% endif %}
+<p>
+
+<p>
+If you have lost access to the owner account, please contact <a
+href="mailto:{{ settings.email }}">{{ settings.author }}</a>.
+</p>
+{% endblock %}
+

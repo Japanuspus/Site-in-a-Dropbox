@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ site.lang }}" lang="{{ site.lang }}">
+<head>
+    <title>{% block title %}{% endblock %} | {{ site.title }}</title>
+    <meta type="keywords" content="{{ site.keywords }}" />
+    <link rel="stylesheet" href="/admin/css/blueprint/screen.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="/admin/css/blueprint/print.css" type="text/css" media="print" />    
+    <!--[if lt IE 8]><link rel="stylesheet" href="/admin/css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+</head>
+<body>
+    <div class="container">
+        <div id="header" class="span-24 last">
+            <a href="{{ site.home }}" class="logo">{{ site.title }}</a>
+        </div>
+        <div id="sidebarleft" class="span-4">
+          {% block sidebarleft %}&nbsp;{% endblock %}
+        </div>
+        <div id="content" class="span-14">
+          {% block content %}{% endblock %}
+        </div>
+        <div id="sidebar" class="span-6 last">
+          {% block sidebar %}&nbsp;{% endblock %} 
+       </div>
+
+       <div class="span-24"></div>
+
+       <div class="span-4">&nbsp;</div>
+       <div id="footer" class="span-20 last">
+            &copy; {{ site.author }}
+            {% if site.author_email %} <a href="mailto:{{ site.author_email }}">{{ site.author_email }}</a>{% endif %}, 2011 
+        </div>
+    </div>
+</body>
+</html>

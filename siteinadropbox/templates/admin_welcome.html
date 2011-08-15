@@ -1,0 +1,41 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Site in a Dropbox - Welcome{% endblock %}
+
+{% block content %}
+  {% if dropbox_info %}
+<h2>Access to Dropbox denied</h2>
+<p>
+  Hi, {{ site_raw.owner }}. An attempt to access your Dropbox account
+  was denied with the status code {{ dropbox_info.status }}.
+  Please reauthorize.
+  If you are no longer interested in using <a href="{{ settings.home
+  }}">Site in a Dropbox</a>, just remove the subdomain from your
+  Google apps admin console.
+</p>
+ {% else %}
+<h2>Welcome to Site in a Dropbox</h2>
+<p>
+  Somebody (probably you?) pointed this domain {{ server_name }} to
+  <a href="{{ settings.home }}">Site in a Dropbox</a>, a service
+  running on Google App Engine.
+</p>
+<p>
+  For this to work, the service <a href="{{ settings.home }}">Site in a Dropbox</a> needs to be
+  authorized to access your dropbox account.
+</p>
+  {% endif %}
+<p>
+  When you press authorize below, you will be taken to the Dropbox
+  website and asked to confirm that <a href="{{ settings.home }}">Site
+  in a Dropbox</a> should be allowed access to your files. Answer yes
+  and you should have a working site :)
+</p>
+<form method="post" action="{{ auth_formurl }}">
+  <input type="submit" name="action" value="authorize" />
+</form>
+<p>
+The namespace assigned to you is "{{ current_namespace }}"
+</p>
+{% endblock %}
+
