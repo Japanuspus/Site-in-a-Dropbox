@@ -14,8 +14,12 @@ use_library('django', '1.2')
 def namespace_manager_default_namespace_for_request():
   """Must return the default namespace for a given request."""
   #google_apps_namespace does not include subdomain -- so not suitable for us
-  #return namespace_manager.google_apps_namespace()
-  return os.environ['SERVER_NAME']
+  #On the other hand, server name might include a version number -- so check for that
+  version = os.environ['CURRENT_VERSION_ID'].split('.')[0]
+  server = os.environ['SERVER_NAME']
+  if server.startswith(version):
+    return server[len(version)+1:]
+  return server
 
 # Enable google appstats
 # http://code.google.com/appengine/docs/python/tools/appstats.html
