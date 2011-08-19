@@ -1,3 +1,4 @@
+from __future__ import with_statement
 import os, sys
 import datetime
 
@@ -34,46 +35,7 @@ TEMPLATE_SETTINGS={
     'logo_16': "/admin/media/SiteinaDropbox-16.png",
 }
 
+with open(os.path.join(APP_ROOT_DIR,'config_site_default.yaml')) as f:
+    DEFAULT_CONFIG_YAML=f.read()
 
-DEFAULT_CONFIG_YAML="""\
-# All fields in site_constants will be available in your template
-# as settings.<foo>
-site_constants:
-  site_title: No site at all
-  subtitle: A site that isn\'t even a site
-  keywords: [SiteInADropbox, site-in-a-dropbox, Google App Engine, Dropbox]
-  about_url: /about
-  contact_url: /contact
-  author: Janus
-  author_email: janus@halwe.dk
-#  google_analytics: xxx
-#  disqus: xxx
-
-# All matching fields will be processed in order presented here
-# i.e. last match to define a given field wins
-# The resource attributes (i.e. the default attributes + what is
-# defined by the resource metadata) can be accessed as page.<foo>
-# in templates
-resource_default_attributes:
-- pattern: '.*'
-  template: default.html
-  
-- pattern: '.*\.(ico)$'
-  resource_class: RawResource
-  content_type: image/x-icon
-
-- pattern: '.*\.(gif)$'
-  resource_class: RawResource
-  content_type: image/gif
-
-- pattern: '.*\.(svg|css|js|html|xhtml|yaml)$'
-  resource_class: TextResource
-
-- pattern: '.*\.(html|xhtml)$'
-  resource_class: PageResource
-
-- pattern: '.*\.(txt|md|text)$'
-  resource_class: PageResource
-  format: markdown
-"""
 
