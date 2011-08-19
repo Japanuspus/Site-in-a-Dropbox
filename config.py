@@ -29,7 +29,9 @@ TEMPLATE_SETTINGS={
     'title': 'Site in a Dropbox',
     'author': 'Janus H. Wesenberg',
     'email': 'janus@halwe.dk',
-    'home' : 'http://siteinadropbox.appspot.com'
+    'home' : 'http://siteinadropbox.appspot.com',
+    'logo_128': "/admin/media/SiteinaDropbox-128.png",
+    'logo_16': "/admin/media/SiteinaDropbox-16.png",
 }
 
 

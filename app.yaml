@@ -1,10 +1,10 @@
 application: siteinadropbox
-version: 0-0-prebeta
+version: b0-00
 runtime: python
 api_version: 1
 
 handlers:
-- url: /(admin/css/.*)
+- url: /(admin/(css|media)/.*)
   static_files: siteinadropbox/static/\1
   upload: siteinadropbox/static/.*
 
