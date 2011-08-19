@@ -33,7 +33,7 @@ from google.appengine.ext import webapp
 import config
 
 _TASKQUEUE_HEADERS = {"Content-Type": "application/octet-stream"}
-_DEFAULT_URL = config.ADMIN_URL+"/_cdeferred"
+_DEFAULT_URL = config.CDEFERRED_URL
 _DEFAULT_QUEUE = "default"
 
 class Error(Exception):

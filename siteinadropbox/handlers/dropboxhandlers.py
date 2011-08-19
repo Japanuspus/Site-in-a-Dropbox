@@ -12,7 +12,6 @@ import dropbox.auth
 import dropbox.client
 from oauth.oauth import OAuthToken
 
-import config
 from siteinadropbox import models
 
 def site_root_url():
@@ -43,20 +42,25 @@ def owneronly(f):
 class AuthHandler(webapp.RequestHandler):
     """
     Handle authorization via oAuth as described in RFC5849, http://tools.ietf.org/html/rfc5849
+
     Consumer/Client: This application
     Service Provider/Server: Dropbox
     /Resource Owner: dropbox account holder
+    Inspired by code for https://dropdav.appspot.com/
 
-    https://dropdav.appspot.com/
+    You must create handler via .new_factory(fornurl=<>, returnurl=<>)
     """
-    formurl = config.ADMIN_URL+'/authorize-dropbox'
+    
+    def __init__(self, formurl, returnurl):
+        self.formurl = formurl
+        self.returnurl = returnurl
 
     @owneronly
     def get(self):
         logging.debug('Auth/get')
         if not 'oauth_token' in self.request.GET:
             logging.error('Invalid oauth callback')
-            self.redirect(config.ADMIN_URL)
+            self.redirect(self.returnurl)
             return
         self.dropbox_auth_callback(self.site)
 
@@ -66,7 +70,7 @@ class AuthHandler(webapp.RequestHandler):
         action = self.request.POST.get('action')
         if not action in ['authorize']:
             logging.error('Invalid oauth form action: %s'%action)
-            self.redirect(config.ADMIN_URL)
+            self.redirect(self.returnurl)
             return
         return self.dropbox_authorize()
 
@@ -76,7 +80,7 @@ class AuthHandler(webapp.RequestHandler):
         Store the token with the user (through a cookie).
         Then forward the user to the server to authorize the token.
         """
-        callback_url=site_root_url()+AuthHandler.formurl
+        callback_url=site_root_url()+self.formurl
         logging.debug('AuthHandler.setup, setting callback URL to '+callback_url)
 
         # get a fresh request token containing "oauth_token" and "oauth_token_secret"
@@ -116,7 +120,7 @@ class AuthHandler(webapp.RequestHandler):
         site=models.Site.get_or_insert_current_site()
         site.dropbox_access_token = access_token.to_string()
         site.put()
-        self.redirect(config.ADMIN_URL)
+        self.redirect(self.returnurl)
                          
 
 

@@ -1,7 +1,9 @@
 import os
-import config
+
 from google.appengine.api import namespace_manager
 from google.appengine.dist import use_library
+
+import config
 
 ## Configure Django
 os.environ['DJANGO_SETTINGS_MODULE'] = config.DJANGO_CONFIG_MODULE

@@ -1,0 +1,25 @@
+{% extends "admin_dashboard_base.html" %}
+
+{% block title %}Config{% endblock %}
+
+{% block content %}
+
+<h2>Config file</h2>
+<p>The config file for {{ server_name }} is {{ config_path }}.</p>
+{% if config_src %}
+<code><pre>{{ config_src }}</pre></code>
+{% else %}
+<p>The config file was not found </p>
+{% endif %}
+
+<h2>Default config</h2>
+<p>The default config is loaded below.</p>
+<ul>
+  <li>For site_constants, the default values are updated
+  field-by-field from the config file.</li>
+  <li>The default_resource_attributes of the config files are appended
+  to the default list.</li>
+</ul>
+<code><pre>{{ config_default }}</pre></code>
+{% endblock %}
+

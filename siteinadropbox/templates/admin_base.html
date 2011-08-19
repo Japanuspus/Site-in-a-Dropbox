@@ -6,14 +6,15 @@
   <link rel="stylesheet" href="/admin/css/blueprint/screen.css" type="text/css" media="screen, projection" />
   <link rel="stylesheet" href="/admin/css/blueprint/print.css" type="text/css" media="print" />    
   <!--[if lt IE 8]><link rel="stylesheet" href="/admin/css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+  <link rel="stylesheet" href="/admin/css/siteinadropbox.css" type="text/css" />
 </head>
 <body>
   <div class="container">
-    <div id="header" class="span-24 last">
-      <a href="{{ settings.home }}" class="logo">{{ settings.title }}</a>
+   <div id="sidebarleft" class="span-4">
+      <a href="{{settings.home}}"><img src="{{ settings.logo_128 }}" alt="{{ settings.title }} logo" /></a>
+    <div class="navbar">
+      {% block navbar %}{% endblock %}
     </div>
-    <div id="sidebarleft" class="span-4">
-      {% block sidebarleft %}&nbsp;{% endblock %}
     </div>
     <div id="content" class="span-14">
       {% block content %}{% endblock %}
@@ -24,13 +25,17 @@
     <div class="span-24"></div>
     <div class="span-4">&nbsp;</div>
     <div id="footer" class="span-20 last">
-      &copy; {{ settings.author }}, 2011.
+      <p>
+        This site is hosted at <a href="{{settings.home}}">{{ settings.title }}</a>, a Google App Engine front end for your Dropbox. &copy; {{ settings.author }}, 2011.
+      </p>
+      <p>
       {% if user %}
-        You are logged in as {{ user.nickname }} &lt; {{ user.email }}&gt;.
+      You are logged in as {{ user.nickname }} &lt; {{ user.email }}&gt;.
         <a href="{{ logout_url }}">Log out</a>.
       {% else %}
         You are not logged in. <a href="{{ login_url }}">Log in</a>.
       {% endif %}
+      </p>
    </div>
   </div>
 </body>

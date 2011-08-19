@@ -1,4 +1,4 @@
-{% extends "admin_base.html" %}
+{% extends "admin_dashboard_base.html" %}
 
 {% block title %}Admin console{% endblock %}
 
@@ -27,17 +27,12 @@ or signed in with the right account, and then press to
 <input type="submit" name="action" value="authorize" />.</p>
 </form>
 
-<h2>Maintenance</h2>
-
+<h2>Delete site</h2>
 <form method="post" action="{{ formurl }}">
- <ul>
-   <li><input type="submit" name="action" value="Sync" /> with Dropbox (subject to rate limits).</li>
-   <li><input type="submit" name="action" value="Verify" /> database integrity.</li>
-   <li><input type="submit" name="action" value="Flush" /> memcache.</li>
-   <li><input type="submit" name="action" value="Reload" /> everything from Dropbox.</li>
-   <li><input type="submit" name="action" value="Delete" /> delete this site.</li>
-</ul>
+<p> Press to <input type="submit" name="action" value="Delete" />this site.</p>
 </form>
+
+
 
 <p>
 Go to Google App engine <a href="/_ah/admin">admin console</a>.

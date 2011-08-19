@@ -20,6 +20,11 @@ from siteinadropbox import cache
 from siteinadropbox.handlers import dropboxhandlers
 from siteinadropbox.handlers.cdeferred import CDeferredHandler
 
+def admin_url(s=None):
+    if not s:
+        return config.ADMIN_URL
+    return config.ADMIN_URL+s
+
 def owneronly(f):
     """
     Decorator to populate self.site and self.user
@@ -46,12 +51,12 @@ def withgov(f):
             self.gov = controller.get_current_site_controller()
         except models.InvalidSiteError:
             logging.debug('Access to admin page of invalid site attempted')
-            self.redirect(config.ADMIN_URL)
+            self.redirect(admin_url())
             return
         self.user = users.get_current_user()
         if gov and gov.site.owner_id != user.user_id():
             logging.info('/admin/auth: Denying admin access for %s (id: %s). Owner ID is: %s'%(user.email(), user.user_id(), site.owner_id))
-            self.redirect(config.ADMIN_URL)
+            self.redirect(admin_url())
             return
         return f(self, *args, **kwargs)
     return new_f
@@ -67,15 +72,15 @@ def withgov(f):
 class BaseHandler(webapp.RequestHandler):
     def render_to_template(self,template_values, template_name=None):
         values ={
-            'auth_formurl': dropboxhandlers.AuthHandler.formurl,
-            'formurl': StatusHandler.formurl,
+            'auth_formurl': admin_url('authorize-dropbox'),
+            'formurl': admin_url(),
             'apps_namespace' : namespace_manager.google_apps_namespace(),
             'current_namespace' : namespace_manager.get_namespace(),
             'server_name' :  os.environ['SERVER_NAME'],
             'settings' : config.TEMPLATE_SETTINGS,
             'user' : users.get_current_user(),
-            'login_url': users.create_login_url(config.ADMIN_URL),
-            'logout_url': users.create_logout_url(config.ADMIN_URL),
+            'login_url': users.create_login_url(admin_url()),
+            'logout_url': users.create_logout_url(admin_url()),
             'request': self.request, #e.g. for request.url
             }
         values.update(template_values)
@@ -84,8 +89,6 @@ class BaseHandler(webapp.RequestHandler):
         self.response.out.write( template.render(template_path, values))
 
 class StatusHandler(BaseHandler):
-    formurl = config.ADMIN_URL
-    
     @owneronly
     def get(self):
         # These should always succeed: Site.get can only fail if
@@ -125,7 +128,7 @@ class StatusHandler(BaseHandler):
             logging.info('/admin-post: Denying admin access')
             return self.error(403)
         action = self.request.POST.get('action').lower()
-        nexturl = self.request.POST.get('redirect_url', config.ADMIN_URL)
+        nexturl = self.request.POST.get('redirect_url', admin_url())
         gov = controller.get_current_site_controller()
         logging.debug('Admin/post, action =%s, nexturl: %s'%(action, nexturl))
         response = ''
@@ -152,7 +155,7 @@ class StatusHandler(BaseHandler):
             self.site.put()
             gov = controller.get_current_site_controller()
             gov.handle_config_changes()
-        self.redirect(config.ADMIN_URL)
+        self.redirect(admin_url())
 
     def welcome(self,site,dropbox_info):
         self.render_to_template({
@@ -194,40 +197,44 @@ def direntrytype(de):
 
 
 class ContentHandler(BaseHandler):
-    formurl = config.ADMIN_URL+'/content'
-
     fields = [
-        ('Type',    lambda k,d,r: direntrytype(d)),
-        ('Name',    lambda k,d,r: k),
-        ('URL',     lambda k,d,r: r and r.url),
-        ('DB Rev.', lambda k,d,r: d and d.revision),
-        ('R Rev.',  lambda k,d,r: r and r.revision),
+        ('type',    lambda k,d,r: direntrytype(d)),
+        ('name',    lambda k,d,r: k),
+        ('url',     lambda k,d,r: r and r.url),
+        ('db_rev',  lambda k,d,r: d and d.revision),
+        ('r_rev',   lambda k,d,r: r and r.revision),
         ]
     
     @owneronly
     def get(self):
         rlist = list_all_resources()
-        ostream = StringIO()
-        ostream.write("<table><tbody>")
-        ostream.write("<tr><th>%s</th></tr>"%'</th><th>'.join( f[0] for f in self.fields))
-        for r in rlist:
-            ostream.write('<tr>%s</tr>'%''.join([
-                '<td>'+cgi.escape(str(f(*r) or ''))+'</td>' for n,f in self.fields
-                ]))
-        ostream.write("</tbody></table>")
-        self.render_to_template(template_name= 'admin_content.html', template_values = {'blob': ostream.getvalue()})
-        ostream.close()
+        content_list = [dict((k,f(*r)) for k,f in self.fields ) for r in rlist]
+        self.render_to_template(template_name= 'admin_content.html', template_values = {'content_list': content_list})
+
+
+        
+class ConfigHandler(BaseHandler):
+    @owneronly
+    def get(self):
+        gov = controller.get_current_site_controller()
+        config_path, config_src = gov.get_config_yaml()
+        self.render_to_template(template_name= 'admin_config.html',
+                                template_values = {'config_default': config.DEFAULT_CONFIG_YAML,
+                                                    'config_path': config_path,
+                                                    'config_src': config_src})
         
 def main():
     logging.getLogger().setLevel(logging.DEBUG)
     CDeferredHandler.set_controller_factory(controller.get_current_site_controller)
 
-    routes = [(getattr(a,'formurl'),a) for a in [
-        StatusHandler,
-        ContentHandler,
-        dropboxhandlers.AuthHandler,
-        CDeferredHandler,
-        ]]
+    routes=[
+        (admin_url()[:-1], webapp.RedirectHandler.new_factory(admin_url(), permanent=True)),
+        (admin_url(), StatusHandler),
+        (admin_url('config'), ConfigHandler),
+        (admin_url('content'), ContentHandler),
+        (admin_url('authorize-dropbox'), dropboxhandlers.AuthHandler.new_factory(formurl = admin_url('authorize-dropbox'), returnurl=admin_url())),
+        (config.CDEFERRED_URL, CDeferredHandler)
+        ]
     application = webapp.WSGIApplication(routes,debug=True)
     wsgiref.handlers.CGIHandler().run(application)
 

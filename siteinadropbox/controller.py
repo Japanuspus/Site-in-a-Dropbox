@@ -34,6 +34,14 @@ class BaseController(object):
     def _parse_config_yaml(self):
         self.site_constants, self.resource_default_attributes = self._do_parse_config_yaml()
         
+    def get_config_yaml(self):
+        """
+        Returns (full config file name, contents)
+        """
+        config_path = os.path.join('/',self.site.dropbox_site_yaml)
+        cfg_resource = models.Resource.get_resource_by_url(config_path)
+        return (os.path.join(self.site.dropbox_base_dir, config_path), cfg_resource and cfg_resource.source)
+        
         
     #Relies on cache.flush_all at config change
     @cache.memoize(key='Controller._do_parse_config_yaml')
@@ -46,11 +54,11 @@ class BaseController(object):
         config_path = os.path.join('/',self.site.dropbox_site_yaml)
         
         # Look for the config file:
-        cfg_resource = models.Resource.get_resource_by_url(config_path)
+        config_path, cfg_src = self.get_config_yaml()
         cfg = None
-        if cfg_resource:
+        if cfg_src:
             try:
-                cfg=yaml.load(cfg_resource.source)
+                cfg=yaml.load(cfg_src)
             except Exception, e:
                 logging.debug('Parsing of config file failed: %s'%e)
                 logging.debug('Exception traceback: %s'%traceback.format_exc())
@@ -128,9 +136,8 @@ class BaseController(object):
         """
         logging.debug('access_error_notify called')
 
-    def resource_access_notify(self, resource = None):
-        logging.debug('Resource accessed: %s'%resource)
-
+    def resource_access_notify(self, resource = None, url = None):
+        logging.debug('Resource accessed: %s'%(resource or (url and '%s by url'%url) ))
 
     def do_verify_database_consistency(self):
         models.DirEntry.verify_all_resources(self)
@@ -148,7 +155,7 @@ class BaseController(object):
             if patterncomp.match(path):
                 da.update(alist)
         # We can't rely on patterns for finding the ConfigResource
-        if '/'+self.site.dropbox_site_yaml==path.lower():
+        if '/'+self.site.dropbox_site_yaml.lower()==path.lower():
             da['resource_class'] = 'ConfigResource'
         else:
             assert da.get('resource_class',None)!='ConfigResource'
@@ -183,9 +190,12 @@ class Controller(BaseController):
         """
         cdeferred.defer(obj, *args, **kwargs)
 
-    def resource_access_notify(self, resource = None):
-        logging.debug('Resource accessed: %s'%resource)
+    def resource_access_notify(self, resource = None, url = None):
+        BaseController.resource_access_notify(self, resource, url)
+        #TODO cache here!
         entry = None
+        if (not resource) and url:
+            resource = models.Resource.get_resource_by_url(url)
         if resource:
             entry = resource.parent()
         models.schedule_sync(self, entry=entry)

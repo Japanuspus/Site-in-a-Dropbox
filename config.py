@@ -10,9 +10,7 @@ DROPBOX_POLL_INTERVAL = datetime.timedelta(seconds=120)     # Min interval betwe
 DROPBOX_FILE_POLL_INTERVAL = datetime.timedelta(seconds=10) # Min interval between single file syncs
 
 #Restrictions to keep the GAE load down:
-FILE_SIZE_LIMIT = 100000
-IMAGEFILE_EXTENSIONS = 'jpg|jpeg|png|bmp|gif'
-PROXY_MAX_AGE = 3600  #For cache-control in Google's reverse proxy. Only used for *.ico
+PROXY_MAX_AGE = 3600  #For cache-control in Google's reverse proxy. Currently used for *.ico
 PROXY_ENABLED = True  #Whether to enable reverse proxy
 
 #Django configuration
@@ -20,8 +18,8 @@ TEMPLATE_DIR='/templates'
 DJANGO_CONFIG_MODULE = 'config_django'
 
 #URL's for the admin interface
-ADMIN_URL='/admin'
-FETCHWORKER_URL = ADMIN_URL+'/_fetchworker'
+ADMIN_URL='/admin/'
+CDEFERRED_URL = '/admin/_cdeferred'
 RESOURCE_QUEUENAME = 'default'
 
 #Constants for the admin templates

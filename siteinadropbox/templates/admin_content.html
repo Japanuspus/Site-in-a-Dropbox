@@ -1,9 +1,30 @@
-{% extends "admin_base.html" %}
+{% extends "admin_dashboard_base.html" %}
 
 {% block title %}Content{% endblock %}
 
 {% block content %}
+<h2>Current content</h2>
 {% if blob %}{{ blob|safe }}{% endif %}
+
+<table>
+  <tr>
+    <th>Type</th>
+    <th>Name</th>
+    <th>URL</th>
+    <th>DB Rev.</th>
+    <th>Resource Rev.</th>
+  </tr>
+  {% for c in content_list %}
+  <tr>
+    <td>{{ c.type }}</td>
+    <td>{{ c.name }}</td>
+    <td>{% if c.url %}<a href="{{ c.url }}">{{ c.url }}</a>{% endif %}</td>
+    <td>{{ c.db_rev }}</td>
+    <td>{{ c.r_rev }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
 <p>
 Types explained:
 <b>R</b>: root entry, 
@@ -11,14 +32,16 @@ Types explained:
 <b>D</b>: directory entry, 
 <b>F</b>: file entry, 
 </p>
-<form method="post" action="{{ formurl }}">
-<p>
-If something is out of whack, you can click to
-<input type="hidden" name="redirect_url" value="{{ request.path }}" />
-<input type="submit" name="action" value="verify" />
-database consistency 
-</p>
-TODO: flush, rerun formatters
-</form>
 
+<h2> Maintenance</h2>
+<form method="post" action="{{ formurl }}">
+<input type="hidden" name="redirect_url" value="{{ request.path }}" />
+<ul>
+ <li><input type="submit" name="action" value="Sync" /> with Dropbox
+  (Asynchroneous, subject to rate limits).</li>
+ <li><input type="submit" name="action" value="Verify" /> database integrity.</li>
+ <li><input type="submit" name="action" value="Flush" /> memcache.</li>
+ <li><input type="submit" name="action" value="Reload" /> everything from Dropbox.</li>
+</ul>
+</form>
 {% endblock %}
