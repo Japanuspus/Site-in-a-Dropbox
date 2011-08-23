@@ -1,4 +1,4 @@
-config_dropbox.ini
-index.yaml
+app/config_dropbox.ini
+app/index.yaml
 runepydoc.sh
 
