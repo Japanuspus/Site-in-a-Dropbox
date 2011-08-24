@@ -1,19 +1,19 @@
 import os
 import logging
-import config
 from cStringIO import StringIO
 import cgi
 import urllib
 
+from google.appengine.ext.webapp import template #Also fixes Django paths
 import wsgiref.handlers
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
 from google.appengine.api import users
 from google.appengine.api import namespace_manager
 import dropbox.auth
 import dropbox.client
 from oauth.oauth import OAuthToken
 
+import config
 from siteinadropbox import models
 from siteinadropbox import controller
 from siteinadropbox import cache

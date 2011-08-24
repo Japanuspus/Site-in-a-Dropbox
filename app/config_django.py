@@ -5,6 +5,7 @@ import logging
 
 logging.debug('Reading config_django.py')
 
+#TODO: remove the filesystem loader
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'siteinadropbox/templates'),)
 TEMPLATE_LOADERS = (
     'siteinadropbox.templateloader.TemplateLoader',
