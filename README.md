@@ -17,5 +17,5 @@ The application can serve multiple domains from a single installation. Custom do
 
 
 Service hosted by by Google App Engine
-(c) Janus H. Wesenberg <janus@halwe.dk>, 2011
+(c) Janus <janus@insignificancegalore.net>, 2011
 
